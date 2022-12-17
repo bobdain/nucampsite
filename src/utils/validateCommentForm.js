@@ -1,8 +1,5 @@
 const validateCommentForm = (values) => {
     const errors = {};
-
-    console.log('values.rating:', values.rating)
-
     if (!values.rating || values.rating === 'Select...') {
         errors.rating = 'Required';
     }
@@ -12,6 +9,10 @@ const validateCommentForm = (values) => {
     }
     else if (values.author.length > 15) {
         errors.author = 'Must be 15 characters or less';
+    }
+
+    if (!values.commentText) {
+        errors.commentText = 'Comment is required';
     }
 
     return errors;
