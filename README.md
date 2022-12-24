@@ -9,3 +9,4 @@ Contains a plethora of tools and techniques that can be leveraged for future pro
   - reactstrap
   - react-spring
   - Formik
+  - redux
