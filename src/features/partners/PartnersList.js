@@ -11,6 +11,7 @@ const PartnersList = () => {
     const isLoading = useSelector((state) => state.partners.isLoading);
     const errMsg = useSelector((state) => state.partners.errMsg);
 
+    // Conditional rendering via ternery chain
     return isLoading ? (
         <Loading />
     ) : errMsg ? (
