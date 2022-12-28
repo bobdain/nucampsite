@@ -1,9 +1,26 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { COMMENTS } from '../../app/shared/COMMENTS';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { baseUrl } from '../../app/shared/baseUrl';
+//import { COMMENTS } from '../../app/shared/COMMENTS';
 
 const initialState = {
-    commentsArray: COMMENTS
+    commentsArray: [],
+    isLoading: true,
+    errMsg: ''
 };
+
+export const fetchComments = createAsyncThunk(
+    'comments/fetchComments',
+    async () => {
+        const response = await fetch(baseUrl + 'comments');
+        if (!response.ok) {
+            return Promise.reject('Unable to fetch, status: ' + response.status);
+        }
+        
+        //const data = await response.json(); // Q: do thois on one line?
+        //return data;
+        return await response.json(); // Q: do this on one line?
+    }
+);
 
 const commentsSlice = createSlice({
     name: 'comments',
@@ -20,6 +37,20 @@ const commentsSlice = createSlice({
             // Ok to "mutate" here because Redux/Immer will enforce 
             // immutability behind the scenes
             state.commentsArray.push(newComment);
+        }
+    },
+    extraReducers: {
+        [fetchComments.pending]: (state) => {
+            state.isLoading = true;
+        },
+        [fetchComments.fulfilled]: (state, action) => {
+            state.isLoading = false;
+            state.errMsg = '';
+            state.commentsArray = action.payload;
+        },
+        [fetchComments.rejected]: (state, action) => {
+            state.isLoading = false;
+            state.errMsg = action.error ? action.error.message : 'Fetch failed';
         }
     }
 });
